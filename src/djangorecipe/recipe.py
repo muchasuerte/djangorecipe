@@ -6,6 +6,7 @@ import sys
 
 from zc.buildout import UserError
 import zc.recipe.egg
+from zc.buildout.buildout import bool_option
 
 from djangorecipe.boilerplate import script_template, versions
 
@@ -84,6 +85,9 @@ class Recipe(object):
             [(self.options.get('control-script', self.name),
               'djangorecipe.manage', 'main')],
             ws, sys.executable, self.options['bin-directory'],
+            relative_paths = ( bool_option(self.buildout['buildout'] , 'relative-paths', False)
+                and self.buildout['buildout']['directory']
+                or ''),
             extra_paths=extra_paths,
             arguments="'%s.%s'" % (project, self.options['settings']),
             initialization=self.options['initialization'])
@@ -98,6 +102,9 @@ class Recipe(object):
                 working_set, sys.executable,
                 self.options['bin-directory'],
                 extra_paths=extra_paths,
+                relative_paths = ( bool_option(self.buildout['buildout'] , 'relative-paths', False)
+                    and self.buildout['buildout']['directory']
+                    or ''),
                 arguments="'%s.%s', %s" % (
                     self.options['project'],
                     self.options['settings'],
@@ -174,6 +181,9 @@ class Recipe(object):
                         sys.executable,
                         self.options['bin-directory'],
                         extra_paths=extra_paths,
+                        relative_paths = ( bool_option(self.buildout['buildout'] , 'relative-paths', False)
+                            and self.buildout['buildout']['directory']
+                        or ''),
                         arguments="'%s.%s', logfile='%s'" % (
                             project, self.options['settings'],
                             self.options.get('logfile')),
